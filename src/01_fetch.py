@@ -28,7 +28,9 @@ def print_markets(data):
     markets = data.get("data", [])
     print(f"Found {len(markets)} markets\n")
 
-    for i, market in enumerate(markets[:5]):
+    for i, market in enumerate(markets[:100]):
+        if market["closed"]:
+            continue 
         question = market.get("question", "N/A")
         price = market["tokens"][0]["price"]
         print(f"{i+1}. {question}")
