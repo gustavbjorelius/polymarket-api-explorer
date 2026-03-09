@@ -5,8 +5,7 @@
 import requests
 import json
 
-# URL = "https://gamma-api.polymarket.com/markets?active=true&limit=5"
-URL = "https://clob.polymarket.com/markets" # seems similar to above
+URL = "https://gamma-api.polymarket.com/markets?active=true&closed=false&limit=50" 
 
 def fetch_markets():
     """GET active markets, return JSON."""
@@ -15,7 +14,7 @@ def fetch_markets():
         response.raise_for_status()
         data = response.json()
         return data
-    except requests.exceptions.RequestedError as e:
+    except requests.exceptions.RequestError as e:
         print(f"Error: {e}")
         return None
 
@@ -25,14 +24,14 @@ def print_markets(data):
         print("No data")
         return
     
-    markets = data.get("data", [])
+    markets = data # .get("data", [])
     print(f"Found {len(markets)} markets\n")
 
     for i, market in enumerate(markets[:100]):
         if market["closed"]:
             continue 
         question = market.get("question", "N/A")
-        price = market["tokens"][0]["price"]
+        price = market["lastTradePrice"]
         print(f"{i+1}. {question}")
         print(f"    Price: {price}\n")
 
